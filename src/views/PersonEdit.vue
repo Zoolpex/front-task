@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { store } from '@/store'
+import BaseInputNumber from '@/components/base/base-input-number/BaseInputNumber.vue'
 
 const route = useRoute()
 
@@ -10,11 +11,16 @@ const person = computed(() => {
   return store.people.find((p) => p.id === id)
 })
 
-function updateAge(value: string) {
-  if (person.value) {
-    person.value.ageInHours = Number(value) || 0
-  }
-}
+const ageInHoursModel = computed({
+  get(): number {
+    return person.value?.ageInHours ?? 0
+  },
+  set(v: number) {
+    if (person.value) {
+      person.value.ageInHours = v
+    }
+  },
+})
 </script>
 
 <template>
@@ -32,13 +38,11 @@ function updateAge(value: string) {
           {{ person.name.toUpperCase() }} IS
         </label>
         <div class="flex items-center gap-2">
-          <input
+          <BaseInputNumber
             id="hours-input"
-            type="text"
-            :value="person.ageInHours"
-            @input="updateAge(($event.target as HTMLInputElement).value)"
-            class="border border-gray-300 rounded px-2 py-1 text-lg outline-none"
+            v-model="ageInHoursModel"
             placeholder="0"
+            :min="0"
           />
           <span class="text-gray-600">hours old</span>
         </div>
