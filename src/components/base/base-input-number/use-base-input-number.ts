@@ -28,6 +28,17 @@ export function extractDigits(raw: string): string {
   return raw.replace(/\D/g, "")
 }
 
+/** Убирает лишние нули слева; «000» → «0», пустая строка не меняется */
+function stripLeadingZerosFromDigitString(digits: string): string {
+  if (digits === "") {
+    return ""
+  }
+
+  const trimmed = digits.replace(/^0+/, "")
+
+  return trimmed === "" ? "0" : trimmed
+}
+
 function clampBigInt(value: bigint, min?: number, max?: number): bigint {
   let v = value
 
@@ -138,40 +149,6 @@ function modelToDigitString(value: number): string {
   return String(Math.trunc(value))
 }
 
-function digitsToCommittedValue(
-  digits: string,
-
-  min: number | undefined,
-
-  max: number | undefined,
-): number {
-  if (digits === "") {
-    return 0
-  }
-
-  let v = BigInt(digits)
-
-  v = clampBigInt(v, min, max)
-
-  return Number(v)
-}
-
-function applyMinMaxToDigits(
-  digits: string,
-  min: number | undefined,
-  max: number | undefined,
-): string {
-  if (digits === "") {
-    return ""
-  }
-
-  let v = BigInt(digits)
-
-  v = clampBigInt(v, min, max)
-
-  return v.toString()
-}
-
 export function useBaseInputNumber(options: UseBaseInputNumberOptions) {
   const {
     modelValue,
@@ -230,7 +207,7 @@ export function useBaseInputNumber(options: UseBaseInputNumberOptions) {
       draft.value = formatDraftFromModel(v)
     },
 
-    { immediate: true },
+    { immediate: true, flush: "post" },
   )
 
   /**
@@ -251,15 +228,27 @@ export function useBaseInputNumber(options: UseBaseInputNumberOptions) {
 
     let digits = extractDigits(el.value)
 
-    digits = applyMinMaxToDigits(digits, min.value, max.value)
+    if (digits === "") {
+      draft.value = ""
+
+      onCommit(0)
+
+      return 0
+    }
+
+    const parsed = BigInt(digits)
+
+    const v = clampBigInt(parsed, min.value, max.value)
+
+    if (parsed !== v) {
+      digits = v.toString()
+    }
 
     const formatted = displayFromDigits(digits)
 
     draft.value = formatted
 
-    const committed = digitsToCommittedValue(digits, min.value, max.value)
-
-    onCommit(committed)
+    onCommit(Number(v))
 
     const totalDigits = extractDigits(formatted).length
 
@@ -269,22 +258,33 @@ export function useBaseInputNumber(options: UseBaseInputNumberOptions) {
   }
 
   function onFieldBlurInternal(event: FocusEvent): void {
-    isFocused.value = false
-
     if (disabled.value) {
+      isFocused.value = false
+
       onBlur?.(event)
 
       return
     }
 
-    const digits = extractDigits(draft.value)
+    const rawFieldText =
+      event.target instanceof HTMLInputElement
+        ? event.target.value
+        : draft.value
+
+    const digits = stripLeadingZerosFromDigitString(extractDigits(rawFieldText))
+
+    const finishBlur = (): void => {
+      isFocused.value = false
+
+      onBlur?.(event)
+    }
 
     if (digits === "") {
       onCommit(0)
 
       draft.value = displayFromDigits("0")
 
-      onBlur?.(event)
+      finishBlur()
 
       return
     }
@@ -301,7 +301,7 @@ export function useBaseInputNumber(options: UseBaseInputNumberOptions) {
 
     draft.value = displayFromDigits(v.toString())
 
-    onBlur?.(event)
+    finishBlur()
   }
 
   function onFieldFocusInternal(event: FocusEvent): void {
