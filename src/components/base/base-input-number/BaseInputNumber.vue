@@ -131,8 +131,10 @@ function onKeydown(event: KeyboardEvent): void {
   border-radius: $radius-input;
   font-family: $font-family-input;
   font-size: $font-size-input-mobile;
-  font-weight: $font-weight-regular;
+  font-weight: $font-weight-medium;
+  font-style: normal;
   line-height: $line-height-input;
+  letter-spacing: $letter-spacing-input;
   white-space: pre;
   visibility: hidden;
   pointer-events: none;
@@ -147,6 +149,7 @@ function onKeydown(event: KeyboardEvent): void {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
+  height: $control-height-mobile;
   min-height: $control-height-mobile;
   margin: 0;
   padding: $padding-input-vertical $padding-input-horizontal;
@@ -157,9 +160,11 @@ function onKeydown(event: KeyboardEvent): void {
   background-color: $color-surface;
   font-family: $font-family-input;
   font-size: $font-size-input-mobile;
-  font-weight: $font-weight-regular;
+  font-weight: $font-weight-medium;
+  font-style: normal;
   line-height: $line-height-input;
-  color: $color-input-default-text;
+  letter-spacing: $letter-spacing-input;
+  color: $color-input-idle-value-text;
   text-align: left;
   outline: none;
   caret-color: $color-input-caret;
@@ -169,6 +174,7 @@ function onKeydown(event: KeyboardEvent): void {
     box-shadow 0.15s ease;
 
   @include media-min-md {
+    height: $control-height-desktop;
     min-height: $control-height-desktop;
     font-size: $font-size-input-desktop;
   }
@@ -178,8 +184,7 @@ function onKeydown(event: KeyboardEvent): void {
   }
 
   &:hover:not(:disabled):not(:focus-visible) {
-    border-color: $color-input-hover-border;
-    color: $color-input-hover-text;
+    border: 1px solid $color-input-hover-border;
   }
 
   &:focus-visible {
@@ -195,7 +200,7 @@ function onKeydown(event: KeyboardEvent): void {
   &:disabled {
     border-color: $color-input-default-border;
     background-color: $color-input-disabled-background;
-    color: $color-input-default-text;
+    color: $color-input-disabled-text;
     cursor: not-allowed;
   }
 }

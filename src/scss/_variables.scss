@@ -1,16 +1,18 @@
 // Типографика
 $font-family-base: system-ui, -apple-system, 'Segoe UI', roboto, 'Helvetica Neue', arial, sans-serif;
 $font-family-input: 'Inter', $font-family-base;
-$font-size-input-mobile: 16px;
-$font-size-input-desktop: 16px;
+$font-size-input-mobile: 18px;
+$font-size-input-desktop: 18px;
 $font-weight-regular: 400;
+$font-weight-medium: 500;
+$letter-spacing-input: 0;
 
 // Цвета
 $color-text-primary: #1a1a1a;
 $color-surface: #ffffff;
-$color-input-default-text: #CFCADF;
+$color-input-idle-value-text: rgba(30, 14, 76, 0.3);
 $color-input-default-border: #CFCADF;
-$color-input-hover-text: #CFCADF;
+$color-input-hover-text: $color-input-idle-value-text;
 $color-input-hover-border: #AA9DCE;
 $color-input-active-text: #1E0E4C;
 $color-input-active-border: #906FEE;
@@ -18,15 +20,16 @@ $color-input-caret: #3D06D7;
 $color-input-idle-placeholder: rgba(30, 14, 76, 0.45);
 $color-border-default: #CFCADF;
 $color-input-disabled-background: #f5f5f5;
+$color-input-disabled-text: #CFCADF;
 $color-focus-ring: rgba(109, 40, 217, 0.28);
 
 // Отступы и размеры
 $radius-input: 6px;
 $control-height-mobile: 44px;
 $control-height-desktop: 44px;
-$padding-input-horizontal: 12px;
+$padding-input-horizontal: 8px;
 $padding-input-vertical: 11px;
-$line-height-input: 1.25;
+$line-height-input: 100%;
 $input-min-width: 72px;
 
 // Брейкпоинты (mobile-first)
