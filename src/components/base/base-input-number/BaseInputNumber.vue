@@ -126,7 +126,8 @@ function onKeydown(event: KeyboardEvent): void {
 .base-input-number__ruler {
   min-width: $input-min-width;
   box-sizing: border-box;
-  padding: $padding-input-vertical $padding-input-horizontal;
+  padding: $padding-input-vertical $padding-input-horizontal-right $padding-input-vertical
+    $padding-input-horizontal-left;
   border: 1px solid transparent;
   border-radius: $radius-input;
   font-family: $font-family-input;
@@ -152,7 +153,8 @@ function onKeydown(event: KeyboardEvent): void {
   height: $control-height-mobile;
   min-height: $control-height-mobile;
   margin: 0;
-  padding: $padding-input-vertical $padding-input-horizontal;
+  padding: $padding-input-vertical $padding-input-horizontal-right $padding-input-vertical
+    $padding-input-horizontal-left;
   border: 1px solid $color-input-default-border;
   border-radius: $radius-input;
   appearance: none;
